@@ -1,8 +1,6 @@
 package com.example.android_ocr_parking;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -27,6 +25,7 @@ public class CameraActivity extends Activity {
     private int cameraId = 0;
     private static final int CAMERA_REQUEST = 1888;
     private String imagePath;
+    private File filename;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,14 +56,22 @@ public class CameraActivity extends Activity {
         ParkingRequest request = new ParkingRequest();
         request.SetImagePath(imagePath);
         if (daysSpinner.getSelectedItemId() > 0)
-            request.SetDuration("days", Integer.parseInt(((TextView)daysSpinner.getSelectedView()).getText().toString()));
+            request.SetDuration("days", Integer.parseInt(((TextView) daysSpinner.getSelectedView()).getText().toString()));
         else if (hoursSpinner.getSelectedItemId() > 0)
-            request.SetDuration("days", Integer.parseInt(((TextView)hoursSpinner.getSelectedView()).getText().toString()));
+            request.SetDuration("days", Integer.parseInt(((TextView) hoursSpinner.getSelectedView()).getText().toString()));
         else if (minsSpinner.getSelectedItemId() > 0)
-            request.SetDuration("days", Integer.parseInt(((TextView)minsSpinner.getSelectedView()).getText().toString()));
+            request.SetDuration("days", Integer.parseInt(((TextView) minsSpinner.getSelectedView()).getText().toString()));
 
-        imageView.setImageResource(R.drawable.ic_launcher);
-        new SendImage(getApplicationContext()).execute(request);
+        try {
+            request.SetImagePath("/sdcard/upload-tmp.jpg");
+            filename = new File("/sdcard/upload-tmp.jpg");
+            FileOutputStream out = new FileOutputStream(filename);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+            imageView.setImageResource(R.drawable.ic_launcher);
+            new SendImage(getApplicationContext()).execute(request);
+        } catch (Exception e) {
+            Toast.makeText(CameraActivity.this.getApplicationContext(), "Error:" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void DisableCameraButton() {
@@ -77,13 +84,11 @@ public class CameraActivity extends Activity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
         startActivityForResult(intent, REQUEST_CODE);
     }
 
     public void onScanImageClick(View view) {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 

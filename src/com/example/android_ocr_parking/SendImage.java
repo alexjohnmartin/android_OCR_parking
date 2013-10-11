@@ -16,8 +16,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import java.io.File;
-import java.util.Calendar;
-import java.util.Date;
 
 public class SendImage extends AsyncTask<ParkingRequest, Void, Boolean> {
 
@@ -35,22 +33,15 @@ public class SendImage extends AsyncTask<ParkingRequest, Void, Boolean> {
             HttpClient client = new DefaultHttpClient();
             HttpContext localContext = new BasicHttpContext();
 
-//            File imageFile = new File(receipt.GetImagePath());
-            File imageFile = new File("/img1.jpg");
+            File imageFile = new File(receipt.GetImagePath());
+//            File imageFile = new File("/img1.jpg");
 
             HttpPost httpPost = new HttpPost("http://10.0.2.2:8080/hackathon_ocr/requestParkingQuote");
             MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
             entity.addPart("userId", new StringBody(String.valueOf(receipt.GetUserId())));
-
-//            entity.addPart("total", new StringBody(String.valueOf(receipt.GetTotal())));
-//            Date today = new Date();
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(today);
-//            String date_string = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.DATE);
-//            entity.addPart("category", new StringBody(receipt.GetCategory()));
-//            entity.addPart("date", new StringBody(date_string));
-
+            entity.addPart("pin", new StringBody(String.valueOf(receipt.GetPin())));
+            entity.addPart("duration", new StringBody(String.valueOf(receipt.GetDuration())));
             entity.addPart("file", new FileBody(imageFile));
 
             httpPost.setEntity(entity);
