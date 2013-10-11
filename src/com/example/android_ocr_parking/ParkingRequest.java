@@ -9,7 +9,7 @@ package com.example.android_ocr_parking;
  */
 public class ParkingRequest {
 
-    private String _imagePath;
+    private String _imagePath = "/img1.jpg";
     public String GetImagePath() { return _imagePath; }
     public void SetImagePath(String imagePath) { _imagePath = imagePath; }
 

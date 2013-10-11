@@ -44,6 +44,10 @@ public class CameraActivity extends Activity {
         }
     }
 
+    public void onUploadClick(View view) {
+        new SendImage(getApplicationContext()).execute(new ParkingRequest());
+    }
+
     private void DisableCameraButton() {
         Button scan_button = (Button)findViewById(R.id.scan_receipt_btn);
         scan_button.setEnabled(false);

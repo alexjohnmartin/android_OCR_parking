@@ -34,7 +34,7 @@ public class SendImage extends AsyncTask<ParkingRequest, Void, Boolean> {
 
             File imageFile = new File(receipt.GetImagePath());
 
-            HttpPost httpPost = new HttpPost("http://192.168.0.170:3000/upload");
+            HttpPost httpPost = new HttpPost("http://10.0.2.2:8080/hackathon_ocr/uploadImage");
             MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             entity.addPart("userId", new StringBody(String.valueOf(receipt.GetUserId())));
 //            entity.addPart("total", new StringBody(String.valueOf(receipt.GetTotal())));
@@ -44,7 +44,7 @@ public class SendImage extends AsyncTask<ParkingRequest, Void, Boolean> {
 //            String date_string = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.DATE);
 //            entity.addPart("category", new StringBody(receipt.GetCategory()));
 //            entity.addPart("date", new StringBody(date_string));
-            entity.addPart("uploadFile", new FileBody(imageFile));
+            entity.addPart("file", new FileBody(imageFile));
             httpPost.setEntity(entity);
             client.execute(httpPost, localContext);
 
