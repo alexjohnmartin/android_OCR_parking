@@ -11,10 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.*;
 
 public class CameraActivity extends Activity {
     private static final int REQUEST_CODE = 1;
@@ -22,14 +21,21 @@ public class CameraActivity extends Activity {
     private ImageView imageView;
     private Camera camera;
     private Button uploadBtn;
+    private Spinner daysSpinner;
+    private Spinner hoursSpinner;
+    private Spinner minsSpinner;
     private int cameraId = 0;
     private static final int CAMERA_REQUEST = 1888;
+    private String imagePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         uploadBtn = (Button) findViewById(R.id.upload_btn);
+        daysSpinner = (Spinner) findViewById(R.id.day_spinner);
+        hoursSpinner = (Spinner) findViewById(R.id.hour_spinner);
+        minsSpinner = (Spinner) findViewById(R.id.minute_spinner);
         imageView = (ImageView) findViewById(R.id.result);
         imageView.setImageResource(R.drawable.ic_launcher);
 
@@ -48,7 +54,17 @@ public class CameraActivity extends Activity {
 
     public void onUploadClick(View view) {
         uploadBtn.setEnabled(false);
-        new SendImage(getApplicationContext()).execute(new ParkingRequest());
+        ParkingRequest request = new ParkingRequest();
+        request.SetImagePath(imagePath);
+        if (daysSpinner.getSelectedItemId() > 0)
+            request.SetDuration("days", Integer.parseInt(((TextView)daysSpinner.getSelectedView()).getText().toString()));
+        else if (hoursSpinner.getSelectedItemId() > 0)
+            request.SetDuration("days", Integer.parseInt(((TextView)hoursSpinner.getSelectedView()).getText().toString()));
+        else if (minsSpinner.getSelectedItemId() > 0)
+            request.SetDuration("days", Integer.parseInt(((TextView)minsSpinner.getSelectedView()).getText().toString()));
+
+        imageView.setImageResource(R.drawable.ic_launcher);
+        new SendImage(getApplicationContext()).execute(request);
     }
 
     private void DisableCameraButton() {
@@ -61,11 +77,13 @@ public class CameraActivity extends Activity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
         startActivityForResult(intent, REQUEST_CODE);
     }
 
     public void onScanImageClick(View view) {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
