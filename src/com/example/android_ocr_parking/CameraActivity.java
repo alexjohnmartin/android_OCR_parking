@@ -21,6 +21,7 @@ public class CameraActivity extends Activity {
     private Bitmap bitmap;
     private ImageView imageView;
     private Camera camera;
+    private Button uploadBtn;
     private int cameraId = 0;
     private static final int CAMERA_REQUEST = 1888;
 
@@ -28,6 +29,7 @@ public class CameraActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
+        uploadBtn = (Button) findViewById(R.id.upload_btn);
         imageView = (ImageView) findViewById(R.id.result);
         imageView.setImageResource(R.drawable.ic_launcher);
 
@@ -45,6 +47,7 @@ public class CameraActivity extends Activity {
     }
 
     public void onUploadClick(View view) {
+        uploadBtn.setEnabled(false);
         new SendImage(getApplicationContext()).execute(new ParkingRequest());
     }
 
@@ -76,12 +79,14 @@ public class CameraActivity extends Activity {
             if (bitmap != null) { bitmap.recycle(); }
             bitmap = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(bitmap);
+            uploadBtn.setEnabled(true);
         } else if (requestCode == REQUEST_CODE) {
             try {
                 if (bitmap != null) { bitmap.recycle(); }
                 stream = getContentResolver().openInputStream(data.getData());
                 bitmap = BitmapFactory.decodeStream(stream);
                 imageView.setImageBitmap(bitmap);
+                uploadBtn.setEnabled(true);
             } catch (FileNotFoundException e) {
                 Toast.makeText(CameraActivity.this.getApplicationContext(), "FileNotFound: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();

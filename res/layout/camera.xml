@@ -8,7 +8,8 @@
     <GridLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp">
 
         <Button android:id="@+id/pick_receipt_btn"
                 android:layout_width="200dp"
@@ -26,14 +27,45 @@
                 android:text="take photo"
                 android:onClick="onScanImageClick" />
 
-        <Button android:id="@+id/upload_btn"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                android:text="upload"
-                android:onClick="onUploadClick" />
     </GridLayout>
+
+    <GridLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp">
+
+        <Spinner android:id="@+id/day_spinner"
+                 android:layout_width="120dp"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="10dp"
+                 android:layout_gravity="center_horizontal"
+                 android:entries="@array/days"/>
+
+        <Spinner android:id="@+id/hour_spinner"
+                 android:layout_width="120dp"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="10dp"
+                 android:layout_gravity="center_horizontal"
+                 android:entries="@array/hours"/>
+
+        <Spinner android:id="@+id/minute_spinner"
+                 android:layout_width="120dp"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="10dp"
+                 android:layout_gravity="center_horizontal"
+                 android:entries="@array/minutes"/>
+
+    </GridLayout>
+
+    <Button android:id="@+id/upload_btn"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:text="upload"
+            android:onClick="onUploadClick"
+            android:enabled="false"/>
 
     <ImageView android:id="@+id/result" android:contentDescription="receipt image" android:layout_height="match_parent" android:layout_width="match_parent"/>
 
